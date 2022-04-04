@@ -2,7 +2,7 @@ from record_parsers.i_record_parser import IRecordParser
 
 
 class EmrEofParser(IRecordParser):
-    def parse(self):
+    def parse(self, session):
         pass
 
     def __init__(self, raw_record_data):

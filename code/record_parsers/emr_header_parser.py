@@ -1,10 +1,11 @@
+from emf_common import debug_print
 from record_parsers.i_record_parser import IRecordParser, parse_as_le
 
 
 class EmrHeaderParser(IRecordParser):
     def __init__(self, raw_record_data):
         super().__init__(raw_record_data)
-        self._emf_header_bytes = raw_record_data[:80]
+        self._emf_header_bytes = raw_record_data[8:80+8]
 
     def _parse_basic_header_obj(self):
         ## TODO parse
@@ -49,12 +50,15 @@ class EmrHeaderParser(IRecordParser):
 
         self._parse_emf_header_ext1()
 
-        if self._offset_pixel_fd >= 100 and \
-                (self._offset_pixel_fd + self._size_pixel_fd <= len(self._raw_record_data)) and \
-                self._offset_pixel_fd < header_size:
+        description = self._raw_record_data[self._offset_description: self._offset_description+2*self._len_description].decode(encoding='utf-16le')
+#        print(description)
+
+        if 100 <= self._offset_pixel_fd < header_size and \
+                (self._offset_pixel_fd + self._size_pixel_fd <= len(self._raw_record_data)):
             header_size = self._offset_pixel_fd
 
         ## TODO parse 2nd extension with its shit
 
-    def parse(self):
+    def parse(self, session):
+        debug_print("")
         self._parse_header_obj()

@@ -1,9 +1,18 @@
 log_level = "info"
 
 
-def info_print(*arg, newline=True):
-    if log_level == "info" or log_level == "debug":
-        if newline:
-            print(*arg)
-        if not newline:
-            print(*arg, end=" ")
+def _print(*args, newline):
+    if newline:
+        print(*args)
+    if not newline:
+        print(*args, end=" ")
+
+
+def debug_print(*args, newline=True):
+    if log_level == "debug":
+        _print(*args, newline=newline)
+
+
+def info_print(*args, newline=True):
+    if log_level in ["info", "debug"]:
+        _print(*args, newline=newline)

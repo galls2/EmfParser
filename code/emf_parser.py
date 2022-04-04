@@ -1,5 +1,7 @@
 from emf_common import info_print
+from record_parsers.emf_parser_session import EmfParserSession
 from record_parsers.emr_arcto_parser import EmrArcToParser
+from record_parsers.emr_create_brush_indirect_parser import EmrCreateBrushIndirectParser
 from record_parsers.emr_eof_parser import EmrEofParser
 from record_parsers.emr_header_parser import EmrHeaderParser
 from record_parsers.i_record_parser import parse_as_le
@@ -12,12 +14,16 @@ class EmfParser:
 
         self.records_mapping = {
             1: EmrHeaderParser,
-            37: EmrArcToParser,
+            55: EmrArcToParser,
+            39: EmrCreateBrushIndirectParser,
             14: EmrEofParser
 
         }
 
     def parse(self):
+
+        session = EmfParserSession()
+
         curr_index = 0
         while curr_index < len(self._raw_data):
             if len(self._raw_data[curr_index:]) < 8:
@@ -30,9 +36,9 @@ class EmfParser:
 
             info_print(f'Found record of type {record_type} and of size {record_size}!')
             if record_type in self.records_mapping.keys():
-                record_raw_data = self._raw_data[curr_index + 8: curr_index + record_size]
+                record_raw_data = self._raw_data[curr_index: curr_index + record_size]
                 record_parser = self.records_mapping[record_type](record_raw_data)
-                record_parser.parse()
+                record_parser.parse(session)
             else:
                 info_print(f"No parser for RecordType={record_type}")
 

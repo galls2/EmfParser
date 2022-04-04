@@ -8,5 +8,5 @@ class IRecordParser:
         self._raw_record_data = raw_record_data
 
     @abstractmethod
-    def parse(self):
+    def parse(self, session):
         pass
