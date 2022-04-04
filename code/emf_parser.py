@@ -1,5 +1,6 @@
 from emf_common import info_print
-from record_parsers.emf_parser_session import EmfParserSession
+from record_parsers.emr_select_object_parser import EmrSelectObjectParser
+from record_parsers.parser_session import EmfParserSession
 from record_parsers.emr_arcto_parser import EmrArcToParser
 from record_parsers.emr_create_brush_indirect_parser import EmrCreateBrushIndirectParser
 from record_parsers.emr_eof_parser import EmrEofParser
@@ -15,6 +16,7 @@ class EmfParser:
         self.records_mapping = {
             1: EmrHeaderParser,
             55: EmrArcToParser,
+            37: EmrSelectObjectParser,
             39: EmrCreateBrushIndirectParser,
             14: EmrEofParser
 
@@ -43,7 +45,7 @@ class EmfParser:
                 info_print(f"No parser for RecordType={record_type}")
 
             curr_index += record_size
-
+            info_print("-------------------------------")
             if record_type == 14:  ## EOF
                 info_print("Done parsing EMF after encountered EOF record!")
                 break

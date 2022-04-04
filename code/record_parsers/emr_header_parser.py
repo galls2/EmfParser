@@ -60,5 +60,5 @@ class EmrHeaderParser(IRecordParser):
         ## TODO parse 2nd extension with its shit
 
     def parse(self, session):
-        debug_print("")
+        debug_print("Parsing Header record")
         self._parse_header_obj()
