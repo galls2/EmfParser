@@ -1,5 +1,8 @@
 from emf_common import info_print
+from record_parsers.emr_bitblt_parser import EmrBitBltParser
+from record_parsers.emr_delete_object_parser import EmrDeleteObjectParser
 from record_parsers.emr_select_object_parser import EmrSelectObjectParser
+from record_parsers.emr_setbkmode_parser import EmrSetBkModeParser
 from record_parsers.parser_session import EmfParserSession
 from record_parsers.emr_arcto_parser import EmrArcToParser
 from record_parsers.emr_create_brush_indirect_parser import EmrCreateBrushIndirectParser
@@ -18,8 +21,12 @@ class EmfParser:
             55: EmrArcToParser,
             37: EmrSelectObjectParser,
             39: EmrCreateBrushIndirectParser,
-            14: EmrEofParser
+            14: EmrEofParser,
+            76: EmrBitBltParser,
+            18: EmrSetBkModeParser,
+            40: EmrDeleteObjectParser
 
+#                                   Impl: 18,bitblt, 82, 84
         }
 
     def parse(self):
