@@ -1,5 +1,6 @@
-from emf_common import debug_print
-from record_parsers.i_record_parser import IRecordParser
+from consts.background_mode import BackgroundMode
+from emf_common import debug_print, info_print
+from record_parsers.i_record_parser import IRecordParser, parse_as_le
 
 
 class EmrSetBkModeParser(IRecordParser):
@@ -8,4 +9,13 @@ class EmrSetBkModeParser(IRecordParser):
 
     def parse(self, session):
         debug_print("Parsing SetBackgroundMode record")
+        raw_bk_mode = parse_as_le(self._raw_record_data[8:12])
 
+        bk_mode = None
+        try:
+            bk_mode = BackgroundMode(raw_bk_mode)
+        except ValueError:
+            info_print(f"Illegal background mode enumeration: {raw_bk_mode}")
+
+        info_print(f"Background mode set to {bk_mode}")
+        session.bk_mode = bk_mode

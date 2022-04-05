@@ -3,7 +3,7 @@ from record_parsers.emr_bitblt_parser import EmrBitBltParser
 from record_parsers.emr_delete_object_parser import EmrDeleteObjectParser
 from record_parsers.emr_select_object_parser import EmrSelectObjectParser
 from record_parsers.emr_setbkmode_parser import EmrSetBkModeParser
-from record_parsers.parser_session import EmfParserSession
+from parser_session import EmfParserSession
 from record_parsers.emr_arcto_parser import EmrArcToParser
 from record_parsers.emr_create_brush_indirect_parser import EmrCreateBrushIndirectParser
 from record_parsers.emr_eof_parser import EmrEofParser
