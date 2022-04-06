@@ -11,5 +11,5 @@ class EmrDeleteObjectParser(IRecordParser):
         if obj_to_delete_index not in session.obj_table.keys():
             info_print(f">>>>> Error: Attempting to delete non existing object index: {obj_to_delete_index}!")
             return
-        debug_print(f"Selected obj of index {obj_to_delete_index}")
+        debug_print(f"Deleted obj of index {obj_to_delete_index}")
         session.obj_table.pop(obj_to_delete_index)

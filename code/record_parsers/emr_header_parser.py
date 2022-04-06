@@ -1,4 +1,5 @@
 from emf_common import debug_print
+from objects.rectangle import Rectangle
 from record_parsers.i_record_parser import IRecordParser, parse_as_le
 
 
@@ -7,10 +8,10 @@ class EmrHeaderParser(IRecordParser):
         super().__init__(raw_record_data)
         self._emf_header_bytes = raw_record_data[8:80+8]
 
-    def _parse_basic_header_obj(self):
+    def _parse_basic_header_obj(self, session):
         ## TODO parse
-        bound_bytes = self._emf_header_bytes[:16]
-        frame_bytes = self._emf_header_bytes[16:32]
+        session.image_bounds = Rectangle.parse_from_bytes(self._emf_header_bytes[:16])
+        frame = Rectangle.parse_from_bytes(self._emf_header_bytes[16:32])
         record_sig = self._emf_header_bytes[32:36]
         assert record_sig == b' EMF'
 
@@ -27,13 +28,13 @@ class EmrHeaderParser(IRecordParser):
         # 2 more things i don't care about
 
     def _parse_emf_header_ext1(self):
-        extension1_bytes = self._raw_record_data[80:92]
+        extension1_bytes = self._raw_record_data[80+8:92+8]
         self._size_pixel_fd = parse_as_le(extension1_bytes[:4])
         self._offset_pixel_fd = parse_as_le(extension1_bytes[4:8])
         b_is_open_gl = parse_as_le(extension1_bytes[8:12]) > 0
 
-    def _parse_header_obj(self):
-        self._parse_basic_header_obj()
+    def _parse_header_obj(self, session):
+        self._parse_basic_header_obj(session)
 
         header_size = 88
         if len(self._raw_record_data) >= 88:
@@ -61,4 +62,4 @@ class EmrHeaderParser(IRecordParser):
 
     def parse(self, session):
         debug_print("Parsing Header record")
-        self._parse_header_obj()
+        self._parse_header_obj(session)

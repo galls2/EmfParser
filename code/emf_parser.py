@@ -26,7 +26,7 @@ class EmfParser:
             18: EmrSetBkModeParser,
             40: EmrDeleteObjectParser
 
-#                                   Impl: 18,bitblt, 82, 84
+            #                                   Impl: bitblt-how to parse the bitmap, 82, 84
         }
 
     def parse(self):
@@ -34,15 +34,18 @@ class EmfParser:
         session = EmfParserSession()
 
         curr_index = 0
+        count_records = 0
         while curr_index < len(self._raw_data):
             if len(self._raw_data[curr_index:]) < 8:
                 info_print("Invalid structure: new record but no room for type and size")
             record_type = parse_as_le(self._raw_data[curr_index:curr_index + 4])
             record_size = parse_as_le(self._raw_data[curr_index + 4:curr_index + 8])
+
             if record_size == 0:
                 info_print(f"Encountered illegal record of size 0! Record Type: f{record_type}")
                 break
 
+            count_records += 1
             info_print(f'Found record of type {record_type} and of size {record_size}!')
             if record_type in self.records_mapping.keys():
                 record_raw_data = self._raw_data[curr_index: curr_index + record_size]
@@ -54,6 +57,7 @@ class EmfParser:
             curr_index += record_size
             info_print("-------------------------------")
             if record_type == 14:  ## EOF
-                info_print("Done parsing EMF after encountered EOF record!")
+                info_print(f"Done parsing EMF after encountered EOF record! Parsed {count_records} records.")
                 break
 
+        ## TODO Need to validate the count_records is equal to emr_header's num records. As well as for the num handles

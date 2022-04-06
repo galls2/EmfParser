@@ -1,6 +1,8 @@
 log_level = "debug"
 
 
+# debug < info < warning < error
+
 def _print(*args, newline):
     if newline:
         print(*args)
@@ -9,7 +11,17 @@ def _print(*args, newline):
 
 
 def debug_print(*args, newline=True):
-    if log_level == "debug":
+    if log_level in ["debug"]:
+        _print(*args, newline=newline)
+
+
+def error_print(*args, newline=True):
+    if log_level in ["debug", "info", "warning", "error"]:
+        _print(*args, newline=newline)
+
+
+def warning_print(*args, newline=True):
+    if log_level in ["debug", "info", "warning"]:
         _print(*args, newline=newline)
 
 
@@ -18,10 +30,10 @@ def info_print(*args, newline=True):
         _print(*args, newline=newline)
 
 
-def parse_color_ref(raw_bytes):
-    assert len(raw_bytes) == 4
-
-    if raw_bytes[-1] != 0:
-        info_print("Invalid ColorRef Object")
-    r, g, b = raw_bytes[0:3]
-    return (r,g,b)
+def enum_index_to_enum_val(enum_index, enum_class):
+    try:
+        enum_obj = enum_class(enum_index)
+        return enum_obj
+    except ValueError:
+        info_print(f">>>>> Error in conversion {hex(enum_index)}({enum_index}) to enum object of type {enum_class.__name__}")
+        return None
